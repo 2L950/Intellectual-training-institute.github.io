@@ -1,0 +1,1 @@
+# Intellectual-training-institute.github.io
