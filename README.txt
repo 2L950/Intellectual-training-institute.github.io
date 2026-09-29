@@ -1,17 +1,14 @@
-INTELLECTUAL TRAINING INSTITUTE — COMPLETE WEBSITE DEMO
+ITI STUDENT PORTAL UPDATE
 
-Includes:
-- Official ITI logo
-- Public website and course catalogue
-- WhatsApp registration
-- Student portal and dashboard
-- Demo student login: ITI001 / student123
-- Admin dashboard and demo admin login: admin / admin123
-- Course management demonstration
-- Certificate verification demonstration
-- Lesson, assessment and result placeholders
-- FAQ, student support and contact sections
-- Mobile responsive design
+Upload index.html and iti-logo.jpg to the root of the 2L950.github.io repository.
 
-Production note:
-The portal is a front-end demonstration. Real student accounts, secure authentication, payments, examinations, results, certificates and administrator data require a secure backend/database. Do not use the demo passwords in production.
+The page connects to the ITI Supabase project and uses:
+- Automatic Student ID generation through the profiles trigger already created in Supabase.
+- Student login and dashboard.
+- Course, progress, result and certificate fields.
+- Certificate number displayed when issued.
+
+Contact/WhatsApp: 0761709847
+
+IMPORTANT:
+The Supabase database SQL must already be installed. Never publish a Supabase secret/service-role key in the website.

@@ -1,36 +1,70 @@
-create sequence if not exists public.student_number_seq start 1;
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intellectual Training Institute | Student Portal</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#172033;background:#f6f8f7}header{background:#063b2b;color:white;padding:12px 5%;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:5}header img{width:50px;height:50px;border-radius:50%;object-fit:cover;background:white}nav{margin-left:auto}nav a{color:white;text-decoration:none;margin-left:16px;font-weight:bold}.hero{background:#063b2b;color:white;padding:70px 6%}.hero h1{font-size:44px;margin:10px 0}.hero p{max-width:700px;font-size:18px}.btn{display:inline-block;padding:12px 18px;border-radius:7px;text-decoration:none;font-weight:bold;margin:5px}.gold{background:#d7a928;color:#111}.outline{border:2px solid white;color:white}.wrap{max-width:1100px;margin:auto;padding:55px 20px}.title{text-align:center;margin-bottom:30px}.title h2{color:#063b2b}.courses,.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.box{background:white;padding:22px;border-radius:12px;box-shadow:0 3px 15px #0001}.box h3{color:#063b2b}.portal{background:white;padding:28px;border-radius:14px;max-width:650px;margin:auto;box-shadow:0 5px 25px #0002}.portal input,.portal select{width:100%;padding:12px;margin:6px 0 14px;border:1px solid #ccd5d0;border-radius:6px}.portal button{border:0;cursor:pointer}.msg{padding:10px;margin-top:10px;border-radius:6px}.dashboard{display:none}.dashboard table{width:100%;border-collapse:collapse}.dashboard td{padding:10px;border-bottom:1px solid #ddd}.cta{text-align:center;background:#063b2b;color:white}.cta a{color:#d7a928}footer{text-align:center;background:#111;color:white;padding:30px} @media(max-width:750px){nav{display:none}.hero h1{font-size:34px}.courses,.features{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><img src="iti-logo.jpg" alt="ITI logo"><strong>Intellectual Training Institute</strong><nav><a href="#courses">Courses</a><a href="#register">Register</a><a href="#portal">Student Portal</a></nav></header>
 
-create or replace function public.generate_student_id()
-returns text
-language plpgsql
-as $$
-begin
-  return 'ITI' || lpad(nextval('public.student_number_seq')::text, 4, '0');
-end;
-$$;
+<section class="hero"><div><small>EDUCATION FOR EXCELLENCE</small><h1>Learn. Grow. Achieve.</h1><p>Welcome to Intellectual Training Institute (ITI). Study our online short courses for two weeks and develop practical knowledge and professional skills.</p><a class="btn gold" href="#register">Register Now</a><a class="btn outline" href="#portal">Student Portal</a></div></section>
 
-create or replace function public.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
-begin
-  insert into public.profiles
-  (id, student_id, full_name, phone, course)
-  values (
-    new.id,
-    public.generate_student_id(),
-    coalesce(new.raw_user_meta_data->>'full_name', ''),
-    new.raw_user_meta_data->>'phone',
-    new.raw_user_meta_data->>'course'
-  );
+<section class="wrap"><div class="title"><h2>Why Study With ITI?</h2></div><div class="features"><div class="box"><h3>100% Online</h3><p>Study using your phone or computer.</p></div><div class="box"><h3>Flexible Learning</h3><p>Read and learn at your own convenient time.</p></div><div class="box"><h3>Student Portal</h3><p>Access your course, progress, examinations and results.</p></div></div></section>
 
-  return new;
-end;
-$$;
+<section id="courses" class="wrap"><div class="title"><h2>Our Courses</h2></div><div class="courses">
+<div class="box">Occupational Health & Safety</div><div class="box">Business Administration</div><div class="box">Data Analysis</div><div class="box">Public Administration</div><div class="box">Early Childhood Education</div><div class="box">Psychosocial Counselling</div><div class="box">Communication Skills</div><div class="box">Office Management</div><div class="box">Teaching Methods</div><div class="box">Computer Skills</div><div class="box">Microsoft Office Work</div></div></section>
 
-create trigger on_auth_user_created
-after insert on auth.users
-for each row
-execute procedure public.handle_new_user();
+<section id="register" class="wrap"><div class="title"><h2>Student Registration</h2><p>Create your ITI account. A Student ID is generated automatically after registration.</p></div><div class="portal"><form id="registerForm">
+<label>Full name</label><input id="regName" required>
+<label>Phone / WhatsApp</label><input id="regPhone" required placeholder="0761709847">
+<label>Email</label><input id="regEmail" type="email" required>
+<label>Password</label><input id="regPassword" type="password" minlength="8" required>
+<label>Course</label><select id="regCourse" required><option value="">Select course</option>
+<option>Occupational Health & Safety</option><option>Business Administration</option><option>Data Analysis</option><option>Public Administration</option><option>Early Childhood Education</option><option>Psychosocial Counselling</option><option>Communication Skills</option><option>Office Management</option><option>Teaching Methods</option><option>Computer Skills</option><option>Microsoft Office Work</option></select>
+<button class="btn gold" type="submit">Create ITI Account</button><div id="regMsg" class="msg"></div></form></div></section>
+
+<section id="portal" class="wrap"><div class="title"><h2>Student Portal</h2><p>Use the email and password registered with ITI.</p></div><div class="portal">
+<form id="loginForm"><label>Email</label><input id="loginEmail" type="email" required><label>Password</label><input id="loginPassword" type="password" required><button class="btn gold" type="submit">Login</button><div id="loginMsg" class="msg"></div></form>
+<div id="dashboard" class="dashboard"><h2>Welcome, <span id="studentName"></span></h2><table><tr><td>Student ID</td><td id="studentId"></td></tr><tr><td>Course</td><td id="studentCourse"></td></tr><tr><td>Progress</td><td id="studentProgress"></td></tr><tr><td>Result</td><td id="studentResult"></td></tr><tr><td>Certificate</td><td id="studentCertificate"></td></tr></table><p><strong>Certificate number is issued after successful course completion.</strong></p><button id="logout" class="btn gold">Log out</button></div></div></section>
+
+<section class="cta wrap"><h2>Certificate Verification</h2><p>Certificate numbers will be generated by ITI after successful completion and can be verified online.</p><p>WhatsApp / Phone: <a href="https://wa.me/260761709847">0761709847</a></p></section>
+<footer><strong>Intellectual Training Institute (ITI)</strong><br>Education for Excellence<br>WhatsApp / Phone: 0761709847<br>&copy; 2026 ITI</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://rhlicyplwfbkqoakqntr.supabase.co";
+const SUPABASE_KEY="sb_publishable_LcDvf6eYCVUU7DN-7ShJlg_5j22q72K";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function showProfile(user){
+ const {data,error}=await db.from("profiles").select("student_id,full_name,course,progress,result,certificate_number,certificate_status").eq("id",user.id).single();
+ if(error){document.getElementById("loginMsg").textContent="Login succeeded, but the student profile could not be loaded. Please contact ITI.";return}
+ document.getElementById("dashboard").style.display="block";
+ document.getElementById("loginForm").style.display="none";
+ document.getElementById("studentName").textContent=data.full_name;
+ document.getElementById("studentId").textContent=data.student_id;
+ document.getElementById("studentCourse").textContent=data.course||"Not assigned";
+ document.getElementById("studentProgress").textContent=(data.progress||0)+"%";
+ document.getElementById("studentResult").textContent=data.result==null?"Pending":data.result+"%";
+ document.getElementById("studentCertificate").textContent=data.certificate_number||"Not issued";
+}
+document.getElementById("registerForm").addEventListener("submit",async e=>{
+ e.preventDefault();const msg=document.getElementById("regMsg");msg.textContent="Creating account...";
+ const name=regName.value.trim(),phone=regPhone.value.trim(),email=regEmail.value.trim(),password=regPassword.value,course=regCourse.value;
+ const {data,error}=await db.auth.signUp({email,password,options:{data:{full_name:name,phone,course}}});
+ if(error){msg.textContent=error.message;return}
+ msg.textContent="Registration successful. Check your email if confirmation is required. Your Student ID will be shown after your first login.";
+ window.open("https://wa.me/260761709847?text="+encodeURIComponent("Hello ITI. I have registered online. Name: "+name+" Course: "+course+" Phone: "+phone)," _blank");
+});
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();const msg=document.getElementById("loginMsg");msg.textContent="Signing in...";
+ const {data,error}=await db.auth.signInWithPassword({email:loginEmail.value.trim(),password:loginPassword.value});
+ if(error){msg.textContent=error.message;return} msg.textContent=""; await showProfile(data.user);
+});
+document.getElementById("logout").addEventListener("click",async()=>{await db.auth.signOut();location.reload()});
+db.auth.getSession().then(({data})=>{if(data.session)showProfile(data.session.user)});
+</script>
+</body></html>
